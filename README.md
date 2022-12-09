@@ -345,6 +345,9 @@ void thread2(void const* args)
 * Maps feature can be added, with data from GPS module which will enable user to navigate more accurately.
 * During locate mode, the user could get the exact location of the stick in his phone.
 	
+### Working Video
+
+https://youtu.be/9I_d-aH5pOs
 
 ### Authors
 	
