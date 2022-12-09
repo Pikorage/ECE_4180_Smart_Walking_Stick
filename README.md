@@ -5,7 +5,8 @@ The main objective of the project is to develop a prototype of a smart walking s
 * Additionally the real time distance is also relayed to the user using TEXT-TO-SPEECH on a Raspberry Pi.
 * The stick can also detect terrain differences such as sudden slope, staircases etc alerting the user with the help of accelarator or IMU sensor.
 * A simple fall detection mechanism using IMU sensor data alerting that the user has encountered a fall. //checkkkk
-* The stick has two modes:                                                                                                                                             
+* The stick has two modes:                                      
+                                                                                                      
         1. **Companion mode**: Helps the user navigate with the data from above mentioned sensors.                                                                      
         2. **Location mode** : Continuously emits a sound via speaker when the user presses the key via Bluefruit Connect.
         
