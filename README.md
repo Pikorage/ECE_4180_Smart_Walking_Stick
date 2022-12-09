@@ -55,9 +55,9 @@ Ultrasonic Sensor Pin Lookup
 </p>
 
 #### Code Snippet:
-
-<code>float distance_ultra; </code> <br />
-<code> void dist(int distance)</code> <br />
+```
+float distance_ultra; 
+void dist(int distance)
 <code>{</code> <br />
 <code>    distance_ultra = distance*32*30/10000;</code> <br />
 <code>}</code> <br />
@@ -67,7 +67,7 @@ Ultrasonic Sensor Pin Lookup
 <code>       mu.checkDistance();   </code> <br /> 
 <code>        Thread::wait(500); </code> <br />  
 <code>    } </code> <br />  
-
+```
 
 
 ### ADAFRUIT Bluetooth Module
@@ -278,6 +278,14 @@ TPA2005D1 Class D Audio Amplifier
 * Maps feature can be added, with data from GPS module which will enable user to navigate more accurately.
 * During locate mode, the user could get the exact location of the stick in his phone.
 	
+### Authors
+	
+* Anand Murali    -- amurali73@gatech.edu
+* Aakash Venkataraman  -- avenkata44@gatech.edu
+* Sibi Renganatth Sudhakar -- ssudhakar32@gatech.edu 
+* Prateeksha Giri -- pgiri8@gatech.edu
+	
+
 	
 	
 
