@@ -59,13 +59,21 @@ Ultrasonic Sensor Pin Lookup
   <img src="Images/Ultrasonic_sensor.jpeg" width="250"/>  
 </p>
 
-<code>void thread3(void const* args){(1)
-    {
-        mu.checkDistance();     //call checkDistance() as much as possible, as this is where
-        pc.printf("hhh Distance %f cm\r\n", distance_ultra);
-        Thread::wait(500);
-    }
-</code>
+#### Code Snippet:
+
+<code>float distance_ultra; </code> <br />
+<code> void dist(int distance)</code> <br />
+<code>{</code> <br />
+<code>    distance_ultra = distance*32*30/10000;</code> <br />
+<code>}</code> <br />
+<code>ultrasonic mu(p6, p7, .1, 1, &dist);</code> <br />   
+<code>void thread3(void const* args){ </code> <br />
+<code>    { </code> <br />  
+<code>       mu.checkDistance();   </code> <br />     
+<code>        pc.printf("hhh Distance %f cm\r\n", distance_ultra); </code> <br />  
+<code>        Thread::wait(500); </code> <br />  
+<code>    } </code> <br />  
+
 
 
 ### ADAFRUIT Bluetooth Module
@@ -92,34 +100,29 @@ to anything with a hardware or software serial port.
   <img src="Images/Adafruit.jpeg" width="250"/>  
 </p>
 
+#### Code Snippet:
+<code>  if (blue.readable()) {  </code> <br />
+<code>            Serial_mutex.lock();</code><br />
+<code>            if (blue.getc() == '!') {</code><br />
+<code>                if (blue.getc() == 'B') { //button data</code><br />
+<code>                    bnum = blue.getc(); //button number</code><br />
+<code>                }}</code><br />           
+<code>           if (bnum == '4') {</code><br />
+<code>               locate_mode = true;</code><br />
+<code>            }</code><br />
+<code>            else if (bnum == '3')</code><br />
+<code>            {</code><br />
+<code>               locate_mode = false;</code><br />
+<code>           }</code><br />
+<code>            Serial_mutex.unlock(); Thread::wait(700);</code><br />
+<code>        }</code><br />
+<code>        if (locate_mode == true)</code><br />
+<code>            buzzer = true;</code><br />
+<code>        else</code><br />
+<code>            buzzer = false;</code><br />
+<code>    }}</code><br />
 
-<code>void thread3(void const* args){(1)
-    {
-       while (true)
-    {
-        if (blue.readable()) {
-            Serial_mutex.lock();
-            if (blue.getc() == '!') {
-                if (blue.getc() == 'B') { //button data
-                    bnum = blue.getc(); //button number
-                }
-            }
-            if (bnum == '4') {
-                locate_mode = true;
-            }
-            else if (bnum == '3')
-            {
-                locate_mode = false;
-            }
-            Serial_mutex.unlock(); Thread::wait(700);
-        }
-        if (locate_mode == true)
-            buzzer = true;
-        else
-            buzzer = false;
-    }
-    }
-</code>
+
 
 
 ### LSM9DS1 IMU sensor
@@ -152,6 +155,15 @@ LSM9DS1 IMU sensor
 <p align="center">
   <img src="Images/IMU.jpeg" width="250"/>  
 </p>
+
+#### Code Snippet:
+<code> LSM9DS1 imu(p28, p27, 0xD6, 0x3C);</code> <br />
+<code>imu.readAccel();</code> <br />
+<code>float ax = imu.calcAccel(imu.ax);</code> <br />
+<code>float ay = imu.calcAccel(imu.ay);</code> <br />
+<code>float az = imu.calcAccel(imu.az);</code> <br />
+<code>float accel_mag = ax * ax + ay * ay + az * az;</code> <br />
+
 
 
 ### MOSFET DRIVER 
@@ -195,10 +207,18 @@ Buzzer:
 
 #### Photo:
 <p align="center">
-<img src="Images/Buzzer.jpeg" width="250"/>
-<img src="Images/D AMplifier.jpeg" width="250"/> 
+<img src="Images/Buzzer.jpeg" width="250"/> 
 </p>
-
+#### Code Snippet:
+<code>if (buzzer == true || has_fallen == true)
+<code>        {
+<code>            buzz = 0.5;
+<code>            Thread::wait(500);
+<code>            buzz = 0.0;
+<code>        }
+<code>        else
+<code>            buzz = 0;
+<code>    }
 
 D - Amplifier
 
