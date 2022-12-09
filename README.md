@@ -2,12 +2,11 @@
 The repository contains details about the implementation of the smart walking stick for visually impaired or old people.
 The main objective of the project is to develop a prototype of a smart walking stick to assist visually impaired and old people to move around as independently as possible. The smart stick has the following features:
 * Haptic feedback is sent to user based on real-time measurements of obstacles from **ultrasonic sensors**.
-* Additionally the real time distance is also conveyed to the user using TEXT-TO-SPEECH on a Raspberry Pi.
-* The stick can also detect terrain differences such as sudden slope, staircases etc alerting the user with the help of accelerator or IMU sensor.
-* A simple fall detection mechanism using IMU sensor data ,alerting using a speaker when the user encounters a fall. 
-* The stick has two modes:                                      
-                                                                                                      
-        1. **Companion mode**: Helps the user navigate with the data from above mentioned sensors.                                                                      
+* Additionally the real time distance is also conveyed to the user using **TEXT-TO-SPEECH** on a **Raspberry Pi**.
+* The stick can also detect terrain differences such as sudden slope, staircases etc alerting the user with the help of **accelerator** or **IMU sensor**.
+* A simple **fall detection** mechanism using IMU sensor data ,alerting using a speaker when the user encounters a fall. 
+* The stick has two modes:                                                                                                                               
+        1. **Companion mode**: Helps the user navigate with the data from above mentioned sensors.                                                                     
         2. **Location mode** : Continuously emits a sound via speaker when the user presses the key via Bluefruit Connect.
         
 ## HARDWARE COMPONENTS
@@ -27,9 +26,6 @@ The main objective of the project is to develop a prototype of a smart walking s
 2. Python
 	
 
-
-
-
 ## BLOCK DIAGRAM
 
 ## WORKING/ OPERATION
@@ -38,13 +34,12 @@ The main objective of the project is to develop a prototype of a smart walking s
 
 Ultrasonic Sensor Pin Lookup
 
-
 | Mbed     | HC-SR04  |
 | -------  | -------- |
-| Vu (5V)	 | Vcc      | 
-| Gnd	     | Gnd      |
-| p6	     | trig     |
-| p7	     | echo     |
+| Vu (5V)  | Vcc      | 
+| Gnd	   | Gnd      |
+| p6	   | trig     |
+| p7	   | echo     |
 
 * Ultrasonic sensor works with the help of trigger and echo signals. 
 * Initally trigger pin sends out an ultrasonic signal and the echo pin waits to receive the signal back. 
@@ -54,7 +49,7 @@ Ultrasonic Sensor Pin Lookup
 * We have used two ultrasonic sensors in our project. One is to detect the obstacles in front of the user and the other sensor is used as a depth sensor which can detect stairs/holes in the path.
 
 
-#### Photo:
+
 <p align="center">
   <img src="Images/Ultrasonic_sensor.jpeg" width="250"/>  
 </p>
@@ -94,7 +89,7 @@ to anything with a hardware or software serial port.
 * Bluefruit App has a color picker, quaternion/accelerometer/gyro/magnetometer or location (GPS) (), and an 8-button control game pad ().
 * We have used 8-button control game pad for locate mode for our project. Through bluetooth we will give command to switch on/off buzzer.
 
-#### Photo:
+
 <p align="center">
   <img src="Images/Adafruit.jpeg" width="250"/>  
 </p>
@@ -135,7 +130,7 @@ LSM9DS1 I2C Pin Lookup
 | SDA	          | p9 (SDA)       |
 | SCL             | p10 (SCL)      |
 
-Brief on I2C
+This sensor used I2C protocol for communication
 
 *   Inter-Integrated Circuit (I2C) Protocol is a protocol intended to allow multiple "peripheral" digital integrated circuits ("chips") to communicate with one or more "controller" chips.
 *  It is only intended for short distance communications within a single device.
@@ -143,14 +138,14 @@ Brief on I2C
 *  Each signal line has a pull-up resistor on it, to restore the signal to high when no device is asserting it low.
 *  I2C  can be used with short runs of wire (2-3m)
 
-LSM9DS1 IMU sensor
+Sensor description:
 
 *  The LSM9DS1 is motion-sensing soc. It has a 3-axis accelerometer, 3-axis gyroscope, and 3-axis magnetometer and nine degrees of freedom (9DOF).
 *  It measures its acceleration in g's, and its scale can be set to either ± 2, 4, 8, or 16 g.
 *  It measure three key properties of movement – angular velocity, acceleration, and heading.
 *  We have used IMU sensor for fall detection. When there is high acceleration , that is sudden change in velocity, we will activate the Digital Out Pin p24 where buzzer is connected, indicating that stick/person has fallen.
 
-#### Photo:
+
 <p align="center">
   <img src="Images/IMU.jpeg" width="250"/>  
 </p>
@@ -187,7 +182,7 @@ Mosfet Driver Pin Lookup
 * MOSFET has a very low gate input voltage that works with 3.3V logic signals like those on mbed.
 * MOSFET driver ICs such as the LTC1155 use a charge pump circuit to drive the gate voltage higher on higher voltage MOSFET driver circuits using a normal digital logic level control signal (i.e., useful when load voltage (RAW in schematic) is larger then the logic supply voltage). 
 
-#### Photo:
+
 <p align="center">
   <img src="Images/Mosfet_Driver.jpeg" width="250"/>  
 </p>
@@ -211,7 +206,7 @@ Buzzer:
 *  When sudden fall is detected with the help of values from IMU, the buzzer is set to 1 - Fall detection
 *  8-button control game pad in bluefruit App is used to switch on/off the buzzer. The sound emitted by the buzzer can be used to locate the stick.
 
-#### Photo:
+
 <p align="center">
 <img src="Images/Buzzer.jpeg" width="250"/> 
 </p>
@@ -259,7 +254,7 @@ TPA2005D1 Class D Audio Amplifier
 </p>
 
 
-<code>   void thread4(void const* args)</code> <br />
+<code>   void thread3(void const* args)</code> <br />
 <code>{</code> <br />
 <code>   while (1)</code> <br />
 <code>   {</code> <br />
@@ -275,6 +270,17 @@ TPA2005D1 Class D Audio Amplifier
 <code>        }</code> <br />
 <code>        Thread::wait(1000);</code> <br />
 <code>    }}}</code> <br />
+	
+	
+### Future Work
+	
+* When fall is detected, the code can be automated to send a SOS message to emergency contact using GPS module via NodeRed.
+* Maps feature can be added, with data from GPS module which will enable user to navigate more accurately.
+* During locate mode, the user could get the exact location of the stick in his phone.
+	
+	
+	
+
 
 
 
