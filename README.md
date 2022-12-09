@@ -60,16 +60,6 @@ The main objective of the project is to develop a prototype of a smart walking s
 
 1. ULTRASONIC SENSOR
 
-<div style="display:flex">
-     <div style="flex:1;padding-right:10px;">
-          <img src="![image](https://user-images.githubusercontent.com/117770245/206371733-b27621d3-05ea-4ea0-a681-be7d265ae249.png)
-" width="200"/>
-     </div>
-     <div style="flex:1;padding-left:10px;">
-          <img src="![image](https://user-images.githubusercontent.com/117770245/206371854-1319f57e-602a-48d7-bd19-ae6aa09e3bdd.png)
-" width="300"/>
-     </div>
-</div>
 ###  ULTRASONIC SENSOR PIN LOOKUP
 
 | Mbed     | HC-SR04  |
@@ -86,6 +76,11 @@ The main objective of the project is to develop a prototype of a smart walking s
 * Wait time of ------ms is added to ensure that the device can receive longest possible time for echo to return and hence avoiding any collision between the previous and the next signal.
 * We have used two ultrasonic sensors in our project. One is to detect the obstacles in front of the user and the other sensor is used as a depth sensor which can detect stairs/holes in the path.
 
+
+#### Photo:
+<p align="center">
+  <img src="Images/Ultrasonic_sensor.jpeg" width="250"/>  
+</p>
 
 2. ADAFRUIT Bluetooth Module
 
@@ -105,6 +100,12 @@ The main objective of the project is to develop a prototype of a smart walking s
 to anything with a hardware or software serial port.
 * Bluefruit App has a color picker, quaternion/accelerometer/gyro/magnetometer or location (GPS) (), and an 8-button control game pad ().
 * We have used 8-button control game pad for locate mode for our project. Through bluetooth we will give command to switch on/off buzzer.
+
+#### Photo:
+<p align="center">
+  <img src="Images/Adafruit.jpeg" width="250"/>  
+</p>
+
 
 3. LSM9DS1 IMU sensor
 
@@ -132,6 +133,12 @@ LSM9DS1 IMU sensor
 *  It measure three key properties of movement – angular velocity, acceleration, and heading.
 *  We have used IMU sensor for fall detection. When there is high acceleration , that is sudden change in velocity, we will activate the Digital Out Pin p24 where buzzer is connected, indicating that stick/person has fallen.
 
+#### Photo:
+<p align="center">
+  <img src="Images/IMU.jpeg" width="250"/>  
+</p>
+
+
 ### MOSFET DRIVER AND MOTOR CONNECTIONS
 |Mbed	  | MOSFET PCB     | External Device  |
 |------   | -----------    | ---------------  |
@@ -145,6 +152,12 @@ LSM9DS1 IMU sensor
 * Mbed can only supply about 200mA of current for external devices via USB power, so an external DC power supply is needed for large loads.
 * MOSFET has a very low gate input voltage that works with 3.3V logic signals like those on mbed.
 * MOSFET driver ICs such as the LTC1155 use a charge pump circuit to drive the gate voltage higher on higher voltage MOSFET driver circuits using a normal digital logic level control signal (i.e., useful when load voltage (RAW in schematic) is larger then the logic supply voltage). 
+
+#### Photo:
+<p align="center">
+  <img src="Images/Mosfet_Driver.jpeg" width="250"/>  
+</p>
+
 
 
 ### BUZZER AND CLASS D AMPLIFIER PIN LOOKUP
@@ -163,6 +176,13 @@ Buzzer:
 *  When sudden fall is detected with the help of values from IMU, the buzzer is set to 1 - Fall detection
 *  8-button control game pad in bluefruit App is used to switch on/off the buzzer. The sound emitted by the buzzer can be used to locate the stick.
 
+#### Photo:
+<p align="center">
+<img src="Images/Buzzer.jpeg" width="250"/>
+<img src="Images/D AMplifier.jpeg" width="250"/> 
+</p>
+
+
 D - Amplifier
 
 TPA2005D1 Class D Audio Amplifier
@@ -172,17 +192,25 @@ TPA2005D1 Class D Audio Amplifier
 *   The audio passes through a simple low-pass filter into the loudspeaker. The high-frequency pulses are blocked. 
 *   The pairs of output transistors never conduct at the same time, there is no other path for current flow apart from the low-pass filter/loudspeaker,due to this    efficiency can exceed 90%. 
 
+<p align="center">
+<img src="Images/D Amplifier.jpeg" width="250"/>
+</p>
+
 Raspberry Pi 4 Model B
 
 *   We have used Raspberry Pi 4 for text to speech with the help of PYTTX and espeak.
 *   The real time sonar distance is sent as a voice signal to user through earphones after delay of every 10 secs.
-
+<p align="center">
+<img src="Images/Raspbery Pi 4 with Sonar.jpeg" width="250"/>
+</p>
 Motor
 
 *   We have used motor to give haptic feedback based on the distance measured by the depth measuring sonar.
 *   The duty cycle of PWM signal which drives the motor increases with increase in the difference between the distance measured by the sonar and threshold distance.
 *   So, as the distance increases, the speed at which motor rotates increases.
-
+<p align="center">
+<img src="Images/Motor.jpeg" width="250"/>
+</p>
 
 
 
