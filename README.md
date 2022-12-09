@@ -209,16 +209,16 @@ Buzzer:
 <p align="center">
 <img src="Images/Buzzer.jpeg" width="250"/> 
 </p>
-#### Code Snippet:
-<code>if (buzzer == true || has_fallen == true)
-<code>        {
-<code>            buzz = 0.5;
-<code>            Thread::wait(500);
-<code>            buzz = 0.0;
-<code>        }
-<code>        else
-<code>            buzz = 0;
-<code>    }
+#### Code Snippet:<br />
+<code>if (buzzer == true || has_fallen == true)</code> <br />
+<code>        {</code> <br />
+<code>            buzz = 0.5;</code> <br />
+<code>            Thread::wait(500);</code> <br /></code> <br />
+<code>            buzz = 0.0;</code> <br />
+<code>        }</code> <br />
+<code>        else</code> <br />
+<code>            buzz = 0;</code> <br />
+<code>    }</code> <br />
 
 D - Amplifier
 
@@ -251,27 +251,25 @@ TPA2005D1 Class D Audio Amplifier
 <img src="Images/Motor.jpeg" width="250"/>
 </p>
 
-<code>void thread3(void const* args){(1)
-    {
-   void thread4(void const* args)
-{
-    while (1)
-    {
-        if (distance_ultra > 40 && distance_ultra < 100)
-        {
-            vibration = (distance_ultra - 40) / 60; // Calibrating value for haptic feedbak. 
-            mymotor = vibration;  // to be based on distance  
-        }
-        else
-        {
-            vibration = 0;
-            mymotor = vibration;
-        }
-        Thread::wait(1000);
-    }
-}	 
-    }
-</code>
+
+<code>   void thread4(void const* args)</code> <br />
+<code>{</code> <br />
+<code>   while (1)</code> <br />
+<code>   {</code> <br />
+<code>       if (distance_ultra > 40 && distance_ultra < 100)</code> <br />
+<code>        {</code> <br />
+<code>            vibration = (distance_ultra - 40) / 60; </code> <br /> 
+<code>            mymotor = vibration; </code> <br />
+<code>        }</code> <br />
+<code>        else</code> <br />
+<code>        {</code> <br />
+<code>            vibration = 0;</code> <br />
+<code>            mymotor = vibration;</code> <br />
+<code>        }</code> <br />
+<code>        Thread::wait(1000);</code> <br />
+<code>    }}}</code> <br />
+
+
 
 
 
