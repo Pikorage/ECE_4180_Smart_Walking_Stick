@@ -3,12 +3,16 @@ The repository contains details about the implementation of the smart walking st
 The main objective of the project is to develop a prototype of a smart walking stick to assist visually impaired and old people to move around as independently as possible. The smart stick has the following features:
 * Haptic feedback is sent to user based on real-time measurements of obstacles from **ultrasonic sensors**.
 * Additionally the real time distance is also conveyed to the user using **TEXT-TO-SPEECH** on a **Raspberry Pi**.
-* The stick can also detect terrain differences such as sudden slope, staircases etc alerting the user with the help of **accelerator** or **IMU sensor**.
+* The stick can also detect terrain differences such as sudden slope, staircases etc alerting the user with the help of **Ultrasonic sensor**.
 * A simple **fall detection** mechanism using IMU sensor data ,alerting using a speaker when the user encounters a fall. 
 * The stick has two modes:                                                                                                                               
         1. **Companion mode**: Helps the user navigate with the data from above mentioned sensors.                                                                     
         2. **Location mode** : Continuously emits a sound via speaker when the user presses the key via Bluefruit Connect.
         
+<p align="center">
+  <img src="Images/stick.jpg" width="250"/>  
+</p>
+
 ## HARDWARE COMPONENTS
 1. Mbed - LPC1768
 2. Raspberry Pi 4B
@@ -58,15 +62,15 @@ Ultrasonic Sensor Pin Lookup
 ```
 float distance_ultra; 
 void dist(int distance)
-<code>{</code> <br />
-<code>    distance_ultra = distance*32*30/10000;</code> <br />
-<code>}</code> <br />
-<code>ultrasonic mu(p6, p7, .1, 1, &dist);</code> <br />   
-<code>void thread3(void const* args){ </code> <br />
-<code>    { </code> <br />  
-<code>       mu.checkDistance();   </code> <br /> 
-<code>        Thread::wait(500); </code> <br />  
-<code>    } </code> <br />  
+{
+    distance_ultra = distance*32*30/10000;
+}
+ultrasonic mu(p6, p7, .1, 1, &dist);
+void thread3(void const* args){ 
+    { 
+	mu.checkDistance();  
+        Thread::wait(500);  
+   } 
 ```
 
 
@@ -95,28 +99,36 @@ to anything with a hardware or software serial port.
 </p>
 
 #### Code Snippet:
-<code>  if (blue.readable()) {  </code> <br />
-<code>            Serial_mutex.lock();</code><br />
-<code>            if (blue.getc() == '!') {</code><br />
-<code>                if (blue.getc() == 'B') { //button data</code><br />
-<code>                    bnum = blue.getc(); //button number</code><br />
-<code>                }}</code><br />           
-<code>           if (bnum == '4') {</code><br />
-<code>               locate_mode = true;</code><br />
-<code>            }</code><br />
-<code>            else if (bnum == '3')</code><br />
-<code>            {</code><br />
-<code>               locate_mode = false;</code><br />
-<code>           }</code><br />
-<code>            Serial_mutex.unlock(); Thread::wait(700);</code><br />
-<code>        }</code><br />
-<code>        if (locate_mode == true)</code><br />
-<code>            buzzer = true;</code><br />
-<code>        else</code><br />
-<code>            buzzer = false;</code><br />
-<code>    }}</code><br />
+```
+void thread3(void const* args)
+{   // This thread waits for input command from Bluefruit app, based on the input it will switch on/off the buzzer
+    char bnum;
+    while (true)
+    {
+        if (blue.readable()) {
+            Serial_mutex.lock();
+            if (blue.getc() == '!') {
+                if (blue.getc() == 'B') { //button data
+                    bnum = blue.getc(); //button number
+                }
+            }
+            if (bnum == '4') {
+                locate_mode = true;
+            }
+            else if (bnum == '3')
+            {
+                locate_mode = false;
+            }
+            Serial_mutex.unlock(); Thread::wait(700);
+        }
+        if (locate_mode == true)
+            buzzer = true;
+        else
+            buzzer = false;
+    }
 
-
+}
+```
 
 
 ### LSM9DS1 IMU sensor
@@ -151,20 +163,25 @@ Sensor description:
 </p>
 
 #### Code Snippet:
-<code> LSM9DS1 imu(p28, p27, 0xD6, 0x3C);</code> <br />
-<code>imu.readAccel();</code> <br />
-<code>float thresh_mag = 1.2;</code> <br />
-<code>float ax = imu.calcAccel(imu.ax);</code> <br />
-<code>float ay = imu.calcAccel(imu.ay);</code> <br />
-<code>float az = imu.calcAccel(imu.az);</code> <br />
-<code>float accel_mag = ax * ax + ay * ay + az * az;</code> <br />
-<code>if (accel_mag > thresh_mag) </code> <br />
-<code>        {</code> <br />
-<code>            has_fallen = true;</code> <br />
-<code>       }</code> <br />
-<code>        else</code> <br />
-<code>            has_fallen = false;</code> <br />
+```
+    while (1)
+    {
+        float thresh_mag = 1.2;        
+        imu.readAccel();
+        float ax = imu.calcAccel(imu.ax);
+        float ay = imu.calcAccel(imu.ay);
+        float az = imu.calcAccel(imu.az);
 
+        float accel_mag = ax * ax + ay * ay + az * az;
+        
+        if (accel_mag > thresh_mag) // If there is a acceleration beyond the threshold magnitude, fall is detected
+        {
+            has_fallen = true;
+
+        }
+        else
+            has_fallen = false;
+```
 
 
 ### MOSFET DRIVER 
@@ -212,17 +229,17 @@ Buzzer:
 </p>
 
 ####  Code Snippet:
-
-<code>if (buzzer == true || has_fallen == true)</code> <br />
-<code>        {</code> <br />
-<code>            buzz = 0.5;</code> <br />
-<code>            Thread::wait(500);</code> <br /></code> <br />
-<code>            buzz = 0.0;</code> <br />
-<code>        }</code> <br />
-<code>        else</code> <br />
-<code>            buzz = 0;</code> <br />
-<code>    }</code> <br />
-
+```
+        if (buzzer == true || has_fallen == true)
+        {
+            buzz = 0.5;
+            Thread::wait(500);
+            buzz = 0.0;
+        }
+        else
+            buzz = 0;
+    }
+```
 
 TPA2005D1 Class D Audio Amplifier
 
@@ -253,31 +270,41 @@ TPA2005D1 Class D Audio Amplifier
 <img src="Images/Motor.jpeg" width="250"/>
 </p>
 
+```
+void thread2(void const* args) 
+{ // This thread assigns a PWM output which is scaled based on the distance between ultrasonic sonic sensor and obstacle to the motor
+  // This thread run after every 1 sec
+    while (1)
+    {
+        if (distance_ultra > 40 && distance_ultra < 100)
+        {
+            vibration = (distance_ultra - 40) / 60;// Calibrating value for haptic feedback
+            mymotor = vibration;  // to be based on distance  
+        }
+        else
+        {
+            vibration = 0;
+            mymotor = vibration;
+        }
+        Thread::wait(1000);
+    }
+}
+```
 
-<code>   void thread3(void const* args)</code> <br />
-<code>{</code> <br />
-<code>   while (1)</code> <br />
-<code>   {</code> <br />
-<code>       if (distance_ultra > 40 && distance_ultra < 100)</code> <br />
-<code>        {</code> <br />
-<code>            vibration = (distance_ultra - 40) / 60; </code> <br /> 
-<code>            mymotor = vibration; </code> <br />
-<code>        }</code> <br />
-<code>        else</code> <br />
-<code>        {</code> <br />
-<code>            vibration = 0;</code> <br />
-<code>            mymotor = vibration;</code> <br />
-<code>        }</code> <br />
-<code>        Thread::wait(1000);</code> <br />
-<code>    }}}</code> <br />
-	
-	
+### Schematic
+
+<p align="center">
+<img src="Images/schematic.jpeg" width="250"/>
+</p>
+
 ### Future Work
 	
 * When fall is detected, the code can be automated to send a SOS message to emergency contact using GPS module via NodeRed.
 * Maps feature can be added, with data from GPS module which will enable user to navigate more accurately.
 * During locate mode, the user could get the exact location of the stick in his phone.
 	
+### Project Gallery
+
 ### Authors
 	
 * Anand Murali    -- amurali73@gatech.edu
