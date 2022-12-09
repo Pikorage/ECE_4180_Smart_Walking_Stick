@@ -25,30 +25,6 @@ The main objective of the project is to develop a prototype of a smart walking s
 ## SOFTWARE
 1. C++
 2. Python
-
-## PIN LAYOUTS/WIRING
-
-
-
-### LIDAR TOF PIN LOOKUP
-
-| Mbed     | TOF VL53L0X  |
-| -------  | ------------ |
-| 3.3 v    | VIN          |
-| GND      |  GND         |
-| P28      | SDA          |
-| P27      | SCL          |
-| P26      | SHDN         |
-
-
-### BUZZER AND CLASS D AMPLIFIER PIN LOOKUP
-|Mbed	             |TPA2005D1         |Speaker
-|----------------- |----------------- |------------
-|Gnd	             |pwr - (gnd), in - |	-
-|Vout (3.3V) or 5V |pwr +	            |
-|p24 (PWM)         |in +	            |
-|                  |out+	            | +
-|                  |out	-	            |
 	
 
 
