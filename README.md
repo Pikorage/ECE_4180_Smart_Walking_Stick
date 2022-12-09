@@ -1,10 +1,10 @@
 # ECE_4180_Smart_Walking_Stick
 The repository contains details about the implementation of the smart walking stick for visually impaired or old people.
 The main objective of the project is to develop a prototype of a smart walking stick to assist visually impaired and old people to move around as independently as possible. The smart stick has the following features:
-* Haptic feedback is sent to user based on real-time measurements of obstacles from **LIDAR** and **ultrasonic sensors**.
+* Haptic feedback is sent to user based on real-time measurements of obstacles from **ultrasonic sensors**.
 * Additionally the real time distance is also conveyed to the user using TEXT-TO-SPEECH on a Raspberry Pi.
-* The stick can also detect terrain differences such as sudden slope, staircases etc alerting the user with the help of accelarator or IMU sensor.
-* A simple fall detection mechanism using IMU sensor data alerting that the user has encountered a fall. 
+* The stick can also detect terrain differences such as sudden slope, staircases etc alerting the user with the help of accelerator or IMU sensor.
+* A simple fall detection mechanism using IMU sensor data ,alerting using a speaker when the user encounters a fall. 
 * The stick has two modes:                                      
                                                                                                       
         1. **Companion mode**: Helps the user navigate with the data from above mentioned sensors.                                                                      
@@ -15,16 +15,15 @@ The main objective of the project is to develop a prototype of a smart walking s
 2. Raspberry Pi 4B
 3. Ultrasonic sensor
 4. Adafruit Bluetooth module
-5. TOF sensor
-6. Accelorometer
-7. Servo motor
+6. LSM9DS1 IMU sensor
+7. DC Motor
 8. MOSFET motor driver
 9. Buzzer/speaker
 10. Class D amplifier
 
 
 ## SOFTWARE
-1. C++
+1. Embedded C
 2. Python
 	
 
@@ -51,7 +50,7 @@ Ultrasonic Sensor Pin Lookup
 * Initally trigger pin sends out an ultrasonic signal and the echo pin waits to receive the signal back. 
 * The distance can be calculated by measuring the width of the echo distance. 
 * Typically a hardware timer is needed but simple divide operation can calibrate the sensor to obtain real time measurement values.
-* Wait time of ------ms is added to ensure that the device can receive longest possible time for echo to return and hence avoiding any collision between the previous and the next signal.
+* Wait time of 500 ms is added to ensure that the device can receive longest possible time for echo to return and hence avoiding any collision between the previous and the next signal.
 * We have used two ultrasonic sensors in our project. One is to detect the obstacles in front of the user and the other sensor is used as a depth sensor which can detect stairs/holes in the path.
 
 
@@ -70,8 +69,7 @@ Ultrasonic Sensor Pin Lookup
 <code>ultrasonic mu(p6, p7, .1, 1, &dist);</code> <br />   
 <code>void thread3(void const* args){ </code> <br />
 <code>    { </code> <br />  
-<code>       mu.checkDistance();   </code> <br />     
-<code>        pc.printf("hhh Distance %f cm\r\n", distance_ultra); </code> <br />  
+<code>       mu.checkDistance();   </code> <br /> 
 <code>        Thread::wait(500); </code> <br />  
 <code>    } </code> <br />  
 
@@ -160,10 +158,17 @@ LSM9DS1 IMU sensor
 #### Code Snippet:
 <code> LSM9DS1 imu(p28, p27, 0xD6, 0x3C);</code> <br />
 <code>imu.readAccel();</code> <br />
+<code>float thresh_mag = 1.2;</code> <br />
 <code>float ax = imu.calcAccel(imu.ax);</code> <br />
 <code>float ay = imu.calcAccel(imu.ay);</code> <br />
 <code>float az = imu.calcAccel(imu.az);</code> <br />
 <code>float accel_mag = ax * ax + ay * ay + az * az;</code> <br />
+<code>if (accel_mag > thresh_mag) </code> <br />
+<code>        {</code> <br />
+<code>            has_fallen = true;</code> <br />
+<code>       }</code> <br />
+<code>        else</code> <br />
+<code>            has_fallen = false;</code> <br />
 
 
 
@@ -193,11 +198,11 @@ Mosfet Driver Pin Lookup
 Buzzer and Class D amplifier Pin Lookup
 |Mbed	             |TPA2005D1             |Speaker
 |-----------------   |-----------------     |------------
-|Gnd	             |pwr - (gnd), in -     |	-
+|Gnd	             |pwr - (gnd), in -     |	
 |Vout (3.3V) or 5V   |pwr +	            |
 |p24 (PWM)           |in +	            |
 |                    |out+	            | +
-|                    |out	-	    |
+|                    |out	-	    | -
 
 Buzzer: 
 
@@ -210,7 +215,9 @@ Buzzer:
 <p align="center">
 <img src="Images/Buzzer.jpeg" width="250"/> 
 </p>
-#### Code Snippet:<br />
+
+####  Code Snippet:
+
 <code>if (buzzer == true || has_fallen == true)</code> <br />
 <code>        {</code> <br />
 <code>            buzz = 0.5;</code> <br />
@@ -221,7 +228,6 @@ Buzzer:
 <code>            buzz = 0;</code> <br />
 <code>    }</code> <br />
 
-D - Amplifier
 
 TPA2005D1 Class D Audio Amplifier
 
