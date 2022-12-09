@@ -40,22 +40,7 @@ The main objective of the project is to develop a prototype of a smart walking s
 | P27      | SCL          |
 | P26      | SHDN         |
 
-### MOSFET AND SERVO PIN LOOKUP
-|Mbed	  | MOSFET PCB   | External Device  |
-|------ | -----------  | ---------------  |
-| gnd	  | JP2-2 gnd	   |                  |
-| 5V	  | JP2-1 RAW	   |                  |
-| P23   | JP2-3 Control|	                |
-|       |	JP1-1        |   Device(neg)    |
-|     	| JP1-2        |   Device(pos)    |
 
-### ULTRASONIC SENSOR PIN LOOKUP
-| Mbed     | HC-SR04  |
-| -------  | -------- |
-| Vu (5V)	 | Vcc      | 
-| Gnd	     | Gnd      |
-| p6	     | trig     |
-| p7	     | echo     |
 ### BUZZER AND CLASS D AMPLIFIER PIN LOOKUP
 |Mbed	             |TPA2005D1         |Speaker
 |----------------- |----------------- |------------
@@ -65,7 +50,7 @@ The main objective of the project is to develop a prototype of a smart walking s
 |                  |out+	            | +
 |                  |out	-	            |
 	
-### ACCELEROMETER
+
 
 
 
@@ -145,16 +130,70 @@ LSM9DS1 IMU sensor
 *  The LSM9DS1 is motion-sensing soc. It has a 3-axis accelerometer, 3-axis gyroscope, and 3-axis magnetometer and nine degrees of freedom (9DOF).
 *  It measures its acceleration in g's, and its scale can be set to either ± 2, 4, 8, or 16 g.
 *  It measure three key properties of movement – angular velocity, acceleration, and heading.
-*  We have used IMU sensor for fall detection. When there is high acceleration , that is sudden change in velocity, we will activate the buzzer, indicating that stick/person has fallen.
+*  We have used IMU sensor for fall detection. When there is high acceleration , that is sudden change in velocity, we will activate the Digital Out Pin p24 where buzzer is connected, indicating that stick/person has fallen.
 
-### MOSFET AND MOTOR LOOKUP
+### MOSFET DRIVER AND MOTOR CONNECTIONS
 |Mbed	  | MOSFET PCB     | External Device  |
 |------   | -----------    | ---------------  |
 | gnd	  | JP2-2 gnd	   |                  |
 | 5V	  | JP2-1 RAW	   |                  |
 | P23     | JP2-3 Control  |	              |
 |         |	JP1-1      |   Device(neg)    |
-|     	  | JP1-2          |   Device(pos)    |
+|     	  |     JP1-2      |   Device(pos)    |
+
+*  p23 digital out pin can be used for control, connects to the control input of the driver circuit. 
+* Mbed can only supply about 200mA of current for external devices via USB power, so an external DC power supply is needed for large loads.
+* MOSFET has a very low gate input voltage that works with 3.3V logic signals like those on mbed.
+* MOSFET driver ICs such as the LTC1155 use a charge pump circuit to drive the gate voltage higher on higher voltage MOSFET driver circuits using a normal digital logic level control signal (i.e., useful when load voltage (RAW in schematic) is larger then the logic supply voltage). 
+
+
+### BUZZER AND CLASS D AMPLIFIER PIN LOOKUP
+|Mbed	             |TPA2005D1             |Speaker
+|-----------------   |-----------------     |------------
+|Gnd	             |pwr - (gnd), in -     |	-
+|Vout (3.3V) or 5V   |pwr +	            |
+|p24 (PWM)           |in +	            |
+|                    |out+	            | +
+|                    |out	-	    |
+
+Buzzer: 
+
+*  p24 digital pin is connected to buzzer.
+*  Buzzer is used for two applications in our prototype. a) For fall detection and b) Locating the stick.
+*  When sudden fall is detected with the help of values from IMU, the buzzer is set to 1 - Fall detection
+*  8-button control game pad in bluefruit App is used to switch on/off the buzzer. The sound emitted by the buzzer can be used to locate the stick.
+
+D - Amplifier
+
+TPA2005D1 Class D Audio Amplifier
+
+*   TI TPA2005D1 is a 1.4-W mono filter-free class D audio power amplifier with a differential input.
+*   Class D amplifiers use PWM for power efficiency. It uses a 250 kHz PWM output with an H-bridge output driver to drive a small speaker.
+*   The audio passes through a simple low-pass filter into the loudspeaker. The high-frequency pulses are blocked. 
+*   The pairs of output transistors never conduct at the same time, there is no other path for current flow apart from the low-pass filter/loudspeaker,due to this    efficiency can exceed 90%. 
+
+Raspberry Pi 4 Model B
+
+*   We have used Raspberry Pi 4 for text to speech with the help of PYTTX and espeak.
+*   The real time sonar distance is sent as a voice signal to user through earphones after delay of every 10 secs.
+
+Motor
+
+*   We have used motor to give haptic feedback based on the distance measured by the depth measuring sonar.
+*   The duty cycle of PWM signal which drives the motor increases with increase in the difference between the distance measured by the sonar and threshold distance.
+*   So, as the distance increases, the speed at which motor rotates increases.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
