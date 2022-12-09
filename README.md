@@ -30,7 +30,11 @@ The main objective of the project is to develop a prototype of a smart walking s
 2. Python
 	
 
-## BLOCK DIAGRAM
+## SCHEMATIC
+
+<p align="center">
+<img src="Images/schematic.jpg" width="1000"/>
+</p>
 
 ## WORKING/ OPERATION
 
@@ -256,10 +260,54 @@ TPA2005D1 Class D Audio Amplifier
 
 
 *   We have used Raspberry Pi 4 for text to speech with the help of PYTTX and espeak.
-*   The real time sonar distance is sent as a voice signal to user through earphones after delay of every 10 secs.
+*   The real time sonar distance is sent as a voice signal to user through earphones after delay of every 4 secs.
 <p align="center">
 <img src="Images/Raspbery Pi 4 with Sonar.jpeg" width="250"/>
 </p>
+
+```
+import RPi.GPIO as GPIO
+import time
+import pyttsx3
+
+engine = pyttsx3.init()
+GPIO.setmode(GPIO.BCM)
+
+TRIG = 23
+ECHO = 24
+
+print ("Started TTS")
+while 1:
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(TRIG,GPIO.OUT)
+    GPIO.setup(ECHO,GPIO.IN)
+
+    GPIO.output(TRIG, False)
+    time.sleep(2)
+
+    GPIO.output(TRIG, True)
+    time.sleep(0.00001)
+    GPIO.output(TRIG, False)
+
+    while GPIO.input(ECHO)==0:
+        pulse_start = time.time()
+
+    while GPIO.input(ECHO)==1:
+        pulse_end = time.time()
+    pulse_duration = pulse_end - pulse_start
+
+    distance = pulse_duration * 17150
+
+    distance = round(distance, 2)
+
+    alert_str = "Distance is " + str(distance)
+    print("Distance:",distance,"cm")        
+    engine.say(alert_str)
+    engine.runAndWait()
+    time.sleep(2)
+    GPIO.cleanup()
+```
+
 
 ### Motor
 
@@ -291,19 +339,12 @@ void thread2(void const* args)
 }
 ```
 
-### Schematic
-
-<p align="center">
-<img src="Images/schematic.jpeg" width="250"/>
-</p>
-
 ### Future Work
 	
 * When fall is detected, the code can be automated to send a SOS message to emergency contact using GPS module via NodeRed.
 * Maps feature can be added, with data from GPS module which will enable user to navigate more accurately.
 * During locate mode, the user could get the exact location of the stick in his phone.
 	
-### Project Gallery
 
 ### Authors
 	
