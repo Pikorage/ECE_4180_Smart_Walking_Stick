@@ -34,9 +34,10 @@ The main objective of the project is to develop a prototype of a smart walking s
 
 ## WORKING/ OPERATION
 
-1. ULTRASONIC SENSOR
+###  ULTRASONIC SENSOR 
 
-###  ULTRASONIC SENSOR PIN LOOKUP
+Ultrasonic Sensor Pin Lookup
+
 
 | Mbed     | HC-SR04  |
 | -------  | -------- |
@@ -58,9 +59,18 @@ The main objective of the project is to develop a prototype of a smart walking s
   <img src="Images/Ultrasonic_sensor.jpeg" width="250"/>  
 </p>
 
-2. ADAFRUIT Bluetooth Module
+<code>void thread3(void const* args){(1)
+    {
+        mu.checkDistance();     //call checkDistance() as much as possible, as this is where
+        pc.printf("hhh Distance %f cm\r\n", distance_ultra);
+        Thread::wait(500);
+    }
+</code>
 
-### ADAFRUIT BLUETOOTH PIN LOOKUP
+
+### ADAFRUIT Bluetooth Module
+
+Adafruit Bluetooth  Pin Lookup
 
 | Mbed            | Adafruit BLE   |
 | --------------  | -------------  |
@@ -83,9 +93,38 @@ to anything with a hardware or software serial port.
 </p>
 
 
-3. LSM9DS1 IMU sensor
+<code>void thread3(void const* args){(1)
+    {
+       while (true)
+    {
+        if (blue.readable()) {
+            Serial_mutex.lock();
+            if (blue.getc() == '!') {
+                if (blue.getc() == 'B') { //button data
+                    bnum = blue.getc(); //button number
+                }
+            }
+            if (bnum == '4') {
+                locate_mode = true;
+            }
+            else if (bnum == '3')
+            {
+                locate_mode = false;
+            }
+            Serial_mutex.unlock(); Thread::wait(700);
+        }
+        if (locate_mode == true)
+            buzzer = true;
+        else
+            buzzer = false;
+    }
+    }
+</code>
 
-### LSM9DS1 I2C PIN LOOKUP
+
+### LSM9DS1 IMU sensor
+
+LSM9DS1 I2C Pin Lookup
 
 | Pin on Breakout | Pin on Mbed    |
 | --------------  | -------------  |
@@ -115,7 +154,8 @@ LSM9DS1 IMU sensor
 </p>
 
 
-### MOSFET DRIVER AND MOTOR CONNECTIONS
+### MOSFET DRIVER 
+Mosfet Driver Pin Lookup
 |Mbed	  | MOSFET PCB     | External Device  |
 |------   | -----------    | ---------------  |
 | gnd	  | JP2-2 gnd	   |                  |
@@ -136,7 +176,8 @@ LSM9DS1 IMU sensor
 
 
 
-### BUZZER AND CLASS D AMPLIFIER PIN LOOKUP
+### BUZZER AND CLASS D AMPLIFIER 
+Buzzer and Class D amplifier Pin Lookup
 |Mbed	             |TPA2005D1             |Speaker
 |-----------------   |-----------------     |------------
 |Gnd	             |pwr - (gnd), in -     |	-
@@ -172,14 +213,16 @@ TPA2005D1 Class D Audio Amplifier
 <img src="Images/D Amplifier.jpeg" width="250"/>
 </p>
 
-Raspberry Pi 4 Model B
+### Raspberry Pi 4 Model B 
+
 
 *   We have used Raspberry Pi 4 for text to speech with the help of PYTTX and espeak.
 *   The real time sonar distance is sent as a voice signal to user through earphones after delay of every 10 secs.
 <p align="center">
 <img src="Images/Raspbery Pi 4 with Sonar.jpeg" width="250"/>
 </p>
-Motor
+
+### Motor
 
 *   We have used motor to give haptic feedback based on the distance measured by the depth measuring sonar.
 *   The duty cycle of PWM signal which drives the motor increases with increase in the difference between the distance measured by the sonar and threshold distance.
@@ -187,6 +230,28 @@ Motor
 <p align="center">
 <img src="Images/Motor.jpeg" width="250"/>
 </p>
+
+<code>void thread3(void const* args){(1)
+    {
+   void thread4(void const* args)
+{
+    while (1)
+    {
+        if (distance_ultra > 40 && distance_ultra < 100)
+        {
+            vibration = (distance_ultra - 40) / 60; // Calibrating value for haptic feedbak. 
+            mymotor = vibration;  // to be based on distance  
+        }
+        else
+        {
+            vibration = 0;
+            mymotor = vibration;
+        }
+        Thread::wait(1000);
+    }
+}	 
+    }
+</code>
 
 
 
