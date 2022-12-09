@@ -1,10 +1,10 @@
 # ECE_4180_Smart_Walking_Stick
 The repository contains details about the implementation of the smart walking stick for visually impaired or old people.
 The main objective of the project is to develop a prototype of a smart walking stick to assist visually impaired and old people to move around as independently as possible. The smart stick has the following features:
-* Haptic feedback is sent to user based on real-time measurements of obstacles from **LIDAR** and **ultrasonic senors**.
-* Additionally the real time distance is also relayed to the user using TEXT-TO-SPEECH on a Raspberry Pi.
+* Haptic feedback is sent to user based on real-time measurements of obstacles from **LIDAR** and **ultrasonic sensors**.
+* Additionally the real time distance is also conveyed to the user using TEXT-TO-SPEECH on a Raspberry Pi.
 * The stick can also detect terrain differences such as sudden slope, staircases etc alerting the user with the help of accelarator or IMU sensor.
-* A simple fall detection mechanism using IMU sensor data alerting that the user has encountered a fall. //checkkkk
+* A simple fall detection mechanism using IMU sensor data alerting that the user has encountered a fall. 
 * The stick has two modes:                                      
                                                                                                       
         1. **Companion mode**: Helps the user navigate with the data from above mentioned sensors.                                                                      
